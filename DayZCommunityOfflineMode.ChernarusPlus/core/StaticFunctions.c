@@ -1,7 +1,7 @@
-static string COM_FormatFloat( float value, int decimals ) 
+static string COM_FormatFloat( float value, int decimals )
 {
     if ( !value.ToString().Contains(".") ) return value.ToString();
-	
+
     string result = "";
     array<string> output = new array<string>;
 
@@ -26,7 +26,7 @@ static string COM_VectorToString( vector vec )
     return result;
 }
 
-static string COM_VectorToString( vector vec, int decimals ) 
+static string COM_VectorToString( vector vec, int decimals )
 {
     string result = "";
     result = COM_FormatFloat(vec[0], decimals) + "|" + COM_FormatFloat(vec[1], decimals) + "|" + COM_FormatFloat(vec[2], decimals);
@@ -84,11 +84,11 @@ static set< Object > COM_GetObjectsAt( vector from, vector to, Object ignore = N
     DayZPhysics.RaycastRV( from, to, contact_pos, contact_dir, contact_component, geom, with, ignore, false, false, ObjIntersectGeom, radius );
     DayZPhysics.RaycastRV( from, to, contact_pos, contact_dir, contact_component, view, with, ignore, false, false, ObjIntersectView, radius );
 
-    if ( geom.Count() > 0 ) 
+    if ( geom.Count() > 0 )
     {
         return geom;
     }
-    if ( view.Count() > 0 ) 
+    if ( view.Count() > 0 )
     {
         return view;
     }
@@ -168,7 +168,7 @@ static vector COM_GetCursorPos()
     return hitPos;
 }
 
-static void COM_Message( string txt ) 
+static void COM_Message( string txt )
 {
     COM_GetMission().OnEvent(ChatMessageEventTypeID, new ChatMessageEventParams(CCDirect, "", txt, ""));
 }
@@ -248,25 +248,23 @@ static PlayerBase COM_CreateCustomDefaultCharacter()
 {
     PlayerBase oPlayer = PlayerBase.Cast( GetGame().CreatePlayer( NULL, GetGame().CreateRandomPlayer(), COM_GetSpawnPoints().GetRandomElement(), 0, "NONE") );
 
-    oPlayer.GetInventory().CreateInInventory( "AviatorGlasses" );
-    oPlayer.GetInventory().CreateInInventory( "MilitaryBeret_UN" );
-    oPlayer.GetInventory().CreateInInventory( "M65Jacket_Black" );
-    oPlayer.GetInventory().CreateInInventory( "TacticalGloves_Black" );
-    oPlayer.GetInventory().CreateInInventory( "HunterPants_Autumn" );
-    oPlayer.GetInventory().CreateInInventory( "MilitaryBoots_Black" );
-    oPlayer.GetInventory().CreateInInventory( "AliceBag_Camo" );
-    oPlayer.GetInventory().CreateInInventory( "Shovel" );
+    EntityAI itemEnt;
+    ItemBase itemBs;
 
-    Weapon_Base oWpn = COM_CreateWeapon( oPlayer, "UMP45" );
-    oPlayer.PredictiveTakeEntityToHands( oWpn );
+    TStringArray tops = {"TShirt_Beige","TShirt_Black","TShirt_Blue","TShirt_Green","TShirt_Grey","TShirt_OrangeWhiteStripes","TShirt_Red","TShirt_RedBlackStripes","TShirt_White"};
+    TStringArray pants = {"CanvasPants_Beige","CanvasPants_Blue","CanvasPants_Grey","CanvasPants_Red","CanvasPants_Violet"};
+    TStringArray shoes = {"AthleticShoes_Black","AthleticShoes_Blue","AthleticShoes_Brown","AthleticShoes_Green","AthleticShoes_Grey"};
+    TStringArray light = {"Chemlight_White","Chemlight_Blue","Chemlight_Green","Chemlight_Red", "Chemlight_Yellow"};
+    TStringArray fruit = {"Apple","Plum","Pear"};
 
-    Magazine oMag = Magazine.Cast( oPlayer.GetInventory().CreateInInventory( "Mag_UMP_25Rnd" ) );
-    oPlayer.GetDayZPlayerInventory().PostWeaponEvent( new WeaponEventAttachMagazine( oPlayer, oMag ) );
-
-    oPlayer.GetInventory().CreateInInventory( "Mag_UMP_25Rnd" );
-
-    oPlayer.SetQuickBarEntityShortcut( oWpn, 0, true );
-    oPlayer.SetQuickBarEntityShortcut( oMag, 1, true );
+    oPlayer.GetInventory().CreateInInventory( tops.GetRandomElement() );
+    oPlayer.GetInventory().CreateInInventory( pants.GetRandomElement() );
+    oPlayer.GetInventory().CreateInInventory( shoes.GetRandomElement() );
+    itemEnt = oPlayer.GetInventory().CreateInInventory( "Rag" );
+    itemBs = ItemBase.Cast(itemEnt);
+  	itemBs.SetQuantity(4);
+    oPlayer.GetInventory().CreateInInventory( light.GetRandomElement() );
+    oPlayer.GetInventory().CreateInInventory( fruit.GetRandomElement() );
 
     return oPlayer;
 }
@@ -308,14 +306,14 @@ static bool m_COM_GodMode; // move these to player saves? Edit: Jacob says "yes"
 static bool m_COM_OldAiming;
 static bool COM_bc_Visible;
 
-static void COM_SnapToGroundNew( Object object ) 
+static void COM_SnapToGroundNew( Object object )
 {
     vector pos = object.GetPosition();
     pos[1] = GetGame().SurfaceY(pos[0], pos[2]);
-    
+
     vector clippingInfo[2];
     vector objectBBOX[2];
-    
+
     object.GetCollisionBox( objectBBOX );
     object.ClippingInfo( clippingInfo );
 
@@ -362,9 +360,9 @@ static void COM_ToggleCursor()
      4 - number
      5 - end of line -> TODO
 */
-static bool COM_CheckStringType( string str, int type ) 
+static bool COM_CheckStringType( string str, int type )
 {
-    for(int i = 0; i<str.Length(); i++ ) 
+    for(int i = 0; i<str.Length(); i++ )
     {
         string character = str.Get(i);
         string token;
